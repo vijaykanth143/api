@@ -1,15 +1,29 @@
 import MaterialTable from "material-table";
 import { useState, useEffect } from "react";
-import { Component } from "react";
+import { Fragment, Component } from "react";
 import moment from "moment";
+import DateFnsUtils from "@date-io/date-fns";
 import { MTableToolbar } from "material-table";
-import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
+import {
+  DatePicker,
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 
 import tableIcons from "./tableicons";
 
 function RemoteData() {
   const [propertyData, setPropertyData] = useState([]);
+  const [selectedDate, handleDateChange] = useState(null);
+
+  const Dataprop = propertyData.filter((item) =>
+    moment(item.updated_at)
+      .format("DD-MMM-YYYY")
+      .includes(moment(selectedDate).format("DD-MMM-YYYY"))
+  );
+  console.log(Dataprop);
+
+  console.log(propertyData);
 
   useEffect(() => {
     fetch("https://uatnew.berighthere.com/api/property?limit=1300")
@@ -22,7 +36,11 @@ function RemoteData() {
   return (
     <MaterialTable
       icons={tableIcons}
-      options={{ debounceInterval: 700, padding: "dense" }}
+      options={{
+        debounceInterval: 700,
+        padding: "dense",
+        searchFieldAlignment: "right",
+      }}
       columns={[
         {
           title: "Property Name",
@@ -37,7 +55,7 @@ function RemoteData() {
         // { title: "First Name", field: "first_name" },
         // { title: "Last Name", field: "last_name" },
       ]}
-      data={propertyData}
+      data={selectedDate === null ? propertyData : Dataprop}
       components={{
         Toolbar: (props) => (
           <div
@@ -55,7 +73,7 @@ function RemoteData() {
               }}
             >
               <MTableToolbar {...props} />
-              <DatePicker
+              {/* <DatePicker
                 style={{
                   width: "750px",
                   margin: "30px",
@@ -72,7 +90,22 @@ function RemoteData() {
               />
               <label htmlFor="datepicker" className="mb-0">
                 <i className="fas fa-calendar-alt" />
-              </label>
+              </label> */}
+              '
+              <MuiPickersUtilsProvider
+                utils={DateFnsUtils}
+                className="positions"
+              >
+                {" "}
+                <KeyboardDatePicker
+                  clearable
+                  value={selectedDate}
+                  placeholder="Date"
+                  value={selectedDate}
+                  onChange={(date) => handleDateChange(date)}
+                  format="MM/dd/yyyy"
+                />
+              </MuiPickersUtilsProvider>
             </div>
           </div>
         ),
