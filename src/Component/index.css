@@ -1,4 +1,3 @@
 .positions {
-  display: flex;
-  justify-content: flex-end !important;
+  text-align: right !important;
 }

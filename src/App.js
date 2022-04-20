@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+
 import RemoteData from "./Component/RemoteData";
 import "./App.css";
 
